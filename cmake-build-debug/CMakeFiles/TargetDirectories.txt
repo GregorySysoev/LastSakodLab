@@ -1,0 +1,3 @@
+C:/Users/User/Documents/LastSAKODLAB/cmake-build-debug/CMakeFiles/edit_cache.dir
+C:/Users/User/Documents/LastSAKODLAB/cmake-build-debug/CMakeFiles/LastSAKODLAB.dir
+C:/Users/User/Documents/LastSAKODLAB/cmake-build-debug/CMakeFiles/rebuild_cache.dir

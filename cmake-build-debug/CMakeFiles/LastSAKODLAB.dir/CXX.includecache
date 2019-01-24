@@ -1,0 +1,30 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+C:/Users/User/Documents/LastSAKODLAB/Graph.cpp
+algorithm
+-
+Graph.h
+C:/Users/User/Documents/LastSAKODLAB/Graph.h
+
+C:/Users/User/Documents/LastSAKODLAB/Graph.h
+iostream
+-
+stack
+-
+vector
+-
+random
+-
+
+C:/Users/User/Documents/LastSAKODLAB/main.cpp
+iostream
+-
+Graph.h
+C:/Users/User/Documents/LastSAKODLAB/Graph.h
+
