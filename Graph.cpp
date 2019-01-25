@@ -136,7 +136,8 @@ void Graph::connect(int idx, int adjacent[], int sizeAdj) {
 
 int Graph::countVertex() {
     int count = 0;
-    ListBig* cur = root;
+    ListBig* cur = nullptr;
+    cur=this->root;
     while (cur != nullptr) {
         count++;
         cur=cur->down;
@@ -206,6 +207,7 @@ void Graph::delVertex(int idx) {
 }
 
 void Graph::depthCrawl(int idx) {
+    flagsOFF();
     int size = countVertex();
     if (size != 0) {
 
@@ -217,6 +219,11 @@ void Graph::depthCrawl(int idx) {
         primeList = search(idx);
         ListBig* obhod = nullptr;
         listSmall *rightOfVertex = nullptr;
+
+        if (primeList == nullptr) {
+            primeList = this->root;
+            idx = root->index;
+        }
 
         if (primeList != nullptr) {
             cout << idx << " ";
@@ -239,7 +246,6 @@ void Graph::depthCrawl(int idx) {
             } else
             {
                 if (cur == nullptr){
-                    flagsOFF();
                     exit;
                 }
                 else {
@@ -251,7 +257,6 @@ void Graph::depthCrawl(int idx) {
                         cur = cur->down;
                     }
                     else {
-                        flagsOFF();
                         exit;
                     }
                 }
@@ -282,15 +287,86 @@ void Graph::flagsOFF() {
         cur = cur->down;
     }
 }
-/*
 
 void Graph::RobertsFloresAlgoritml(int idx) {
-    int matrix[countVertex()][countVertex()];
+    flagsOFF();
     ListBig* cur = search(idx);
-    if (cur != nullptr) {
+//    ListBig* isxhod = cur;
 
+    if (cur != nullptr) {
+        int n = countVertex();
+        listSmall* rightVertex = cur->right;
+        stack<ListBig*>* S = new stack<ListBig*>;
+
+        S->push(cur);
+        if (rightVertex == nullptr) {
+            cout << "Vertex are not connected with other vertex";
+            exit;
+        } else {
+            S->push(rightVertex->self);
+            cur->check = true;
+            cur->right->self->check = true;
+        }
+
+        bool flagWasReturn = false;
+        ListBig* a = nullptr;
+        int beforeVertex = idx;
+
+        while (S->size() != 1) {
+            if (flagWasReturn) {
+                flagWasReturn = false;
+                rightVertex = a->findRight(beforeVertex)->right;
+                a=a->findRight(beforeVertex)->self;
+            } else {
+                if (S->size() == n) {
+                    while (S->size() != 0) {
+                        cout << cur->index << " ";
+                        cur = S->top();
+                        S->pop();
+                    }
+                    return;
+                }
+                if (S->size()>0) {
+                    a = S->top();
+                    rightVertex = a->right;
+                } else return;
+            }
+
+            if (rightVertex == nullptr) {
+                if (a->findRight(idx) != nullptr) {
+                    while (S->size() != 0) {
+                        cout << S->top()->index << " ";
+                        S->pop();
+                    }
+                    exit;
+                } else {
+                    beforeVertex = a->index;
+                    S->pop();
+                    flagWasReturn = true;
+                    continue;
+                }
+            } else {
+                while ((rightVertex != nullptr) && (rightVertex->self->check == true)) {
+                    rightVertex = rightVertex->right;
+                }
+                if (rightVertex != nullptr) {
+                    rightVertex->self->check = true;
+                    S->push(rightVertex->self);
+                } else {
+                    if (S->size() == n) {
+                        while (S->size() != 0) {
+                            cout << cur->index << " ";
+                            cur = S->top();
+                            S->pop();
+                        }
+                        return;
+                    }
+                    flagWasReturn = true;
+                }
+            }
+        }
+        cout << endl << "Graph has no any hamilton cycle" << endl;
     }
 
 
 }
-*/
