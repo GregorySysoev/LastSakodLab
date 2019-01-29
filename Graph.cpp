@@ -290,83 +290,76 @@ void Graph::flagsOFF() {
 
 void Graph::RobertsFloresAlgoritml(int idx) {
     flagsOFF();
-    ListBig* cur = search(idx);
-//    ListBig* isxhod = cur;
+    ListBig* soughtFor = search(idx);
 
-    if (cur != nullptr) {
+    if (soughtFor != nullptr) { // если вершина найдена
         int n = countVertex();
-        listSmall* rightVertex = cur->right;
         stack<ListBig*>* S = new stack<ListBig*>;
-
-        S->push(cur);
-        if (rightVertex == nullptr) {
-            cout << "Vertex are not connected with other vertex";
-            exit;
+        if (soughtFor->right == nullptr) {
+            cout << "Graph has no hamilton cycle";
+            return;
         } else {
-            S->push(rightVertex->self);
-            cur->check = true;
-            cur->right->self->check = true;
+            S->push(soughtFor);
+            soughtFor->check = true;
         }
+        ListBig* ListBigWhile = nullptr;
+        listSmall* listSmallWhile = nullptr;
+        int notThat = 0;
+        bool wasReturn = false;
 
-        bool flagWasReturn = false;
-        ListBig* a = nullptr;
-        int beforeVertex = idx;
-
-        while (S->size() != 1) {
-            if (flagWasReturn) {
-                flagWasReturn = false;
-                rightVertex = a->findRight(beforeVertex)->right;
-                a=a->findRight(beforeVertex)->self;
+        while (S->size() != 0) {
+            if (wasReturn) {
+                wasReturn = false;
+                // получаем предыдущую вершину
+                if (S->empty() != true) ListBigWhile = S->top();
+                listSmallWhile = ListBigWhile->findRight(notThat)->right; // получаем след элемент в lists
+                goto back;
             } else {
-                if (S->size() == n) {
-                    while (S->size() != 0) {
-                        cout << cur->index << " ";
-                        cur = S->top();
-                        S->pop();
-                    }
-                    return;
-                }
-                if (S->size()>0) {
-                    a = S->top();
-                    rightVertex = a->right;
-                } else return;
+                ListBigWhile = S->top(); // получаем добавленную ранее вершину
+                listSmallWhile = ListBigWhile->right;
+                goto front;
             }
-
-            if (rightVertex == nullptr) {
-                if (a->findRight(idx) != nullptr) {
-                    while (S->size() != 0) {
+            ;
+            front:
+            while ((listSmallWhile != nullptr) && (listSmallWhile->self->check)) {
+                listSmallWhile = listSmallWhile->right;
+            }
+            if (listSmallWhile == nullptr) {
+                if ((S->size() == n) && (ListBigWhile->findRight(idx) != nullptr)) {
+                    while (S->size() != 0) { // Печать
                         cout << S->top()->index << " ";
                         S->pop();
                     }
-                    exit;
+                    return;
                 } else {
-                    beforeVertex = a->index;
+                    notThat = ListBigWhile->index;
+                    ListBigWhile->check = false;
                     S->pop();
-                    flagWasReturn = true;
+                    wasReturn = true;
                     continue;
                 }
             } else {
-                while ((rightVertex != nullptr) && (rightVertex->self->check == true)) {
-                    rightVertex = rightVertex->right;
-                }
-                if (rightVertex != nullptr) {
-                    rightVertex->self->check = true;
-                    S->push(rightVertex->self);
-                } else {
-                    if (S->size() == n) {
-                        while (S->size() != 0) {
-                            cout << cur->index << " ";
-                            cur = S->top();
-                            S->pop();
-                        }
-                        return;
-                    }
-                    flagWasReturn = true;
-                }
+                listSmallWhile->self->check = true;
+                S->push(listSmallWhile->self);
+                continue;
             }
+            back:
+                while ((listSmallWhile != nullptr) && (listSmallWhile->self->check)) {
+                    listSmallWhile = listSmallWhile->right;
+                }
+                if (listSmallWhile == nullptr) {
+                    notThat = ListBigWhile->index;
+                    ListBigWhile->check = false;
+                    S->pop();
+                    wasReturn = true;
+                    continue;
+                } else {
+                    listSmallWhile->self->check = true;
+                    S->push(listSmallWhile->self);
+                    continue;
+                }
+            ;
         }
-        cout << endl << "Graph has no any hamilton cycle" << endl;
+        cout << "Graph has no hamilton cycle";
     }
-
-
 }
